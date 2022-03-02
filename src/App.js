@@ -3,6 +3,7 @@ import "./App.css";
 import MaterialTable from "material-table";
 import dataList from "./data/data.json";
 import { Checkbox, Select, MenuItem } from "@material-ui/core";
+const fs = require('fs');
 
 function DataTable() {
 
@@ -33,6 +34,26 @@ function DataTable() {
 
   const handleCheck = () => {
     setFilter(!filter);
+    // console.log(dataList);
+    // console.log(dataList.length);
+    // dataList[dataList.length] = {
+    // "id": dataList.length,
+    // "Vendor name": "IJ INC",
+    // "Vendor contact": "peter@xx.com",
+    // "Buisness Unit Acquiring": "All",
+    // "Lead Data Steward": "LA Lakers",
+    // "Business Contact": "Patrick Viscount",
+    // "Main Users of Data": "Insurance",
+    // "Brief Desc of Data Used": "global variable checking",
+    // "Value Dervied From Data": "Risk Assesment",
+    // "Contracts in Zycus": "H1Z1Z0MB13S",
+    // "IT Source": "",
+    // "WorkdayLink": "hi"
+    // };
+    // console.log(dataList.length);
+    // dataList[dataList.length-1].id = "";
+    // console.log(dataList);
+
   }
 
   useEffect(() => {
@@ -55,19 +76,26 @@ function DataTable() {
           addRowPosition: "first",
           filtering: filter,
           search: true,
-          draggable: true
+          draggable: true,
+          paginationType: "stepped",
+          exportButton: true,
+          exportCsv: (columns, data) => {
+            alert('You should develop a code to export ' + data.length + ' rows');
+            console.log(data);
+          }
         }}
         editable={{
           onRowAdd: (newRow) =>
             new Promise((resolve, reject) => {
               var newID = findID(data);
-              // console.log(`newID: ${newID}`);
               const updatedRows = [...data, { id: newID, ...newRow }];
               setTimeout(() => {
                 setData(updatedRows);
+                console.log(updatedRows);
                 resolve();
               }, 1000);
             }),
+      
 
           onRowDelete: (selectedRow) =>
             new Promise((resolve, reject) => {
