@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import MaterialTable from "material-table";
-import dataList from "./data/data.json";
 import { Checkbox, Select, MenuItem } from "@material-ui/core";
-const fs = require('fs');
+import Modal from "./Modal"
+import { render } from "@testing-library/react";
+const URL = "http://localhost:4000/DataStreams";
 
 function DataTable() {
 
-  const [data, setData] = useState(dataList);
+  const [data, setData] = useState([]);
   const [filter, setFilter] = useState(false);
   const [segment, setSegment] = useState("all");
+  const [show, setShow] = useState(false);
+  useEffect(()=>{
+    getDataList()
+  },[]);
+
+  const getDataList=()=> {
+    fetch(URL).then(resp=>resp.json())
+    .then(resp=>setData(resp))
+  };
+
   const columns = [
     { title: "ID", field: "id", editable: false },
-    { title: "Vendor name", field: "Vendor name" },
+    { title: "Vendor name", field: "Vendor name"},
+    {title: "More Info", render: (rowData) => <button onClick={handleClickModal}>More Info</button>},
     { title: "Vendor contact", field: "Vendor contact" },
     { title: "Buisness Unit Acquiring", field: "Buisness Unit Acquiring" },
     {
@@ -32,32 +44,17 @@ function DataTable() {
     { title: "IT Source", field: "IT Source" }
   ];
 
+  function handleClickModal() {
+    setShow(true);
+  }
+
   const handleCheck = () => {
     setFilter(!filter);
-    // console.log(dataList);
-    // console.log(dataList.length);
-    // dataList[dataList.length] = {
-    // "id": dataList.length,
-    // "Vendor name": "IJ INC",
-    // "Vendor contact": "peter@xx.com",
-    // "Buisness Unit Acquiring": "All",
-    // "Lead Data Steward": "LA Lakers",
-    // "Business Contact": "Patrick Viscount",
-    // "Main Users of Data": "Insurance",
-    // "Brief Desc of Data Used": "global variable checking",
-    // "Value Dervied From Data": "Risk Assesment",
-    // "Contracts in Zycus": "H1Z1Z0MB13S",
-    // "IT Source": "",
-    // "WorkdayLink": "hi"
-    // };
-    // console.log(dataList.length);
-    // dataList[dataList.length-1].id = "";
-    // console.log(dataList);
-
   }
 
   useEffect(() => {
-    setData(segment === 'all'? dataList : dataList.filter(dt => dt["Main Users of Data"] === segment))
+    //backend update broke this
+    setData(segment === 'all'? data : data.filter(dt => dt["Main Users of Data"] === segment));
   }, [segment]);
 
   return (
@@ -66,7 +63,6 @@ function DataTable() {
       <h4 align="center">
         Please see the react component below
       </h4>
-
       <MaterialTable
         title="3rd Party Vendors"
         data={data}
@@ -78,47 +74,46 @@ function DataTable() {
           search: true,
           draggable: true,
           paginationType: "stepped",
-          exportButton: true,
-          exportCsv: (columns, data) => {
-            alert('You should develop a code to export ' + data.length + ' rows');
-            console.log(data);
-          }
+          exportButton: true
         }}
         editable={{
           onRowAdd: (newRow) =>
             new Promise((resolve, reject) => {
-              var newID = findID(data);
-              const updatedRows = [...data, { id: newID, ...newRow }];
-              setTimeout(() => {
-                setData(updatedRows);
-                console.log(updatedRows);
-                resolve();
-              }, 1000);
+              console.log(newRow);
+              let newID = findID(data);
+              newRow.id = newID;
+              fetch(URL,{
+                method: "POST",
+                headers:{
+                  "Content-type": "application/json"
+                },
+                body: JSON.stringify(newRow)
+              }).then(resp=>resp.json()).then(resp=>getDataList())
+              .then(resolve());
             }),
       
 
           onRowDelete: (selectedRow) =>
             new Promise((resolve, reject) => {
-              const index = selectedRow.tableData.id;
-              // console.log(index);
-              const updatedRows = [...data];
-              updatedRows.splice(index, 1);
-              console.log(updatedRows);
-              setTimeout(() => {
-                setData(updatedRows);
-                resolve();
-              }, 1000);
+              fetch(`${URL}/${selectedRow.id}`,{
+                method: "DELETE",
+                headers:{
+                  "Content-type": "application/json"
+                },
+              }).then(resp=>resp.json()).then(resp=>getDataList())
+              .then(resolve());
             }),
 
           onRowUpdate: (updatedRow, oldRow) =>
             new Promise((resolve, reject) => {
-              const index = oldRow.tableData.id;
-              const updatedRows = [...data];
-              updatedRows[index] = updatedRow;
-              setTimeout(() => {
-                setData(updatedRows);
-                resolve();
-              }, 1000);
+              fetch(`${URL}/${oldRow.id}`,{
+                method: "PUT",
+                headers:{
+                  "Content-type": "application/json"
+                },
+                body: JSON.stringify(updatedRow)
+              }).then(resp=>resp.json()).then(resp=>getDataList())
+              .then(resolve());
             })
         }}
       actions = {[
@@ -140,7 +135,12 @@ function DataTable() {
           id="demo-select-simple"
           style={{width: 100}}
           value={segment}
-          onChange={(e) => setSegment(e.target.value)}
+          onChange={(e) => {
+            setSegment(e.target.value);
+            if(e.target.value === "all") {
+              window.location.reload();
+            }
+          }}
           >
           <MenuItem value={"all"}> All </MenuItem>
           <MenuItem value={"Insurance"}> Insurance </MenuItem>
@@ -152,6 +152,12 @@ function DataTable() {
         }
       ]}
       />
+    <Modal show={show} onClose={() => setShow(false)} title="MY MODAL">
+      <p>Secret Info</p>
+      <ul>
+        Don't look its secret
+      </ul>
+      </Modal>
     </div>
   );
 }
@@ -174,7 +180,7 @@ function findURL(dataStream) {
   let url = "";
   
   for (let i = 0; i < data.length; i++) {
-    if( data[i].startsWith("https")){
+    if( data[i].startsWith("https://www.myworkday.com")){
       url = data[i];
       return url;
     }

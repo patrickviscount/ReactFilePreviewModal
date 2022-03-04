@@ -21,7 +21,7 @@ code {
   background-color: beige;
 } */
 
-.MuiTable-root {
+/* .MuiTable-root {
   background-color: beige;
 }
 
@@ -29,10 +29,10 @@ code {
   background-color: beige;
 }
 
-a {
-  text-decoration: none;
-}
-
 .MuiTableCell-root {
   background-color: beige;
+} */
+
+a {
+  text-decoration: none;
 }
