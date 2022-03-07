@@ -3,8 +3,8 @@ import "./App.css";
 import MaterialTable from "material-table";
 import { Checkbox, Select, MenuItem } from "@material-ui/core";
 import Modal from "./Modal"
-import { render } from "@testing-library/react";
 const URL = "http://localhost:4000/DataStreams";
+let oldSeg = "all";
 
 function DataTable() {
 
@@ -12,6 +12,7 @@ function DataTable() {
   const [filter, setFilter] = useState(false);
   const [segment, setSegment] = useState("all");
   const [show, setShow] = useState(false);
+  const [idNum, setIdNum] = useState(1);
   useEffect(()=>{
     getDataList()
   },[]);
@@ -24,7 +25,12 @@ function DataTable() {
   const columns = [
     { title: "ID", field: "id", editable: false },
     { title: "Vendor name", field: "Vendor name"},
-    {title: "More Info", render: (rowData) => <button onClick={handleClickModal}>More Info</button>},
+    {
+      title: "More Info",
+      render: (rowData) => (
+        <button onClick={() => handleClickModal(rowData["id"])}>
+          More Info </button> 
+          )},
     { title: "Vendor contact", field: "Vendor contact" },
     { title: "Buisness Unit Acquiring", field: "Buisness Unit Acquiring" },
     {
@@ -44,8 +50,9 @@ function DataTable() {
     { title: "IT Source", field: "IT Source" }
   ];
 
-  function handleClickModal() {
-    setShow(true);
+  function handleClickModal(Id) {
+    setIdNum(Id);
+    setShow(!show);
   }
 
   const handleCheck = () => {
@@ -53,8 +60,13 @@ function DataTable() {
   }
 
   useEffect(() => {
-    //backend update broke this
+    if(segment != "all" && oldSeg != "all") {
+      console.log('here');
+      window.location.reload();
+    }
+    console.log(segment, oldSeg);
     setData(segment === 'all'? data : data.filter(dt => dt["Main Users of Data"] === segment));
+    oldSeg = segment;
   }, [segment]);
 
   return (
@@ -137,9 +149,6 @@ function DataTable() {
           value={segment}
           onChange={(e) => {
             setSegment(e.target.value);
-            if(e.target.value === "all") {
-              window.location.reload();
-            }
           }}
           >
           <MenuItem value={"all"}> All </MenuItem>
@@ -152,12 +161,11 @@ function DataTable() {
         }
       ]}
       />
-    <Modal show={show} onClose={() => setShow(false)} title="MY MODAL">
-      <p>Secret Info</p>
-      <ul>
-        Don't look its secret
-      </ul>
-      </Modal>
+      <Modal
+        show={show}
+        idNumber={idNum}
+        onClose={() => setShow(false)}
+      />
     </div>
   );
 }
