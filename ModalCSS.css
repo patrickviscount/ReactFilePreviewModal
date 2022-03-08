@@ -67,3 +67,48 @@ h6 {
   font-weight: bold;
   color: rgb(141, 141, 141);
 }
+
+
+  return (
+    <div
+      className="modal"
+      onClick={props.onClose}
+      style={{ height: document.body.scrollHeight + 20 }}
+    >
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h4 className="modal-title">Petah INC</h4>
+        </div>
+        <div className="modal-body">
+          <h6>Vendor contact:</h6>
+          petAH@xasdx.com <br />
+          <hr />
+          <h6>Buisness Unit Acquiring:</h6>
+          Insurance <br />
+          <hr />
+          <h6>Lead Data Steward:</h6>
+          Tom Brady
+          <br /> <hr />
+          <h6>Business Contact:</h6> CONTACST
+          <br /> <hr />
+          <h6>Main Users of Data:</h6> Insurances
+          <br /> <hr />
+          <h6>Brief Desc of Data Used:</h6> global variable checking
+          <br /> <hr />
+          <h6>Value Dervied From Data:</h6> Risk Assesment
+          <br /> <hr />
+          <h6>Contracts in Zycus:</h6> H1Z1Z0MB13Sa
+          <br /> <hr />
+          <h6>IT Source:</h6> MASH
+          <br />
+          <hr />
+          <h6>WorkdayLink:</h6> nothjign imporetant here
+        </div>
+        <div className="modal-footer">
+          <button onClick={props.onClose} className="exitButton">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
