@@ -7,7 +7,7 @@
       "Buisness Unit Acquiring": "Insurance",
       "Lead Data Steward": "Tom Brady",
       "Business Contact": "CONTACST",
-      "Main Users of Data": "Insurances",
+      "Main Users of Data": "Insurance",
       "Brief Desc of Data Used": "global variable checking",
       "Value Dervied From Data": "Risk Assesment",
       "Contracts in Zycus": "H1Z1Z0MB13Sa",
@@ -139,7 +139,16 @@
     },
     {
       "Buisness Unit Acquiring": "s",
-      "id": 11
+      "id": 11,
+      "Vendor name": "Busy Company",
+      "Vendor contact": "contact@com.com",
+      "Lead Data Steward": "in",
+      "Business Contact": "in",
+      "Main Users of Data": "in",
+      "Brief Desc of Data Used": "in",
+      "Value Dervied From Data": "in",
+      "Contracts in Zycus": "in",
+      "IT Source": "in"
     }
   ]
 }

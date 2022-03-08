@@ -19,8 +19,8 @@ const Modal = (props) => {
     }
 
     useEffect(() => {
-            getDataList();
-        document.body.addEventListener('keydown', closeOnEsc)
+        getDataList();
+        document.body.addEventListener('keydown', closeOnEsc);
         return function cleanup() {
             document.body.removeEventListener('keydown', closeOnEsc);
         }
@@ -40,25 +40,26 @@ const Modal = (props) => {
                 <div className='modal-header'>
                     <h4 className='modal-title'>{data["Vendor name"]}</h4>
                 </div>
-                <div className='modal-body'><ul>
-                <li> Vendor contact: {data["Vendor contact"]}</li>
-                <li> Buisness Unit Acquiring: {data["Buisness Unit Acquiring"]}</li>
-                <li> Lead Data Steward: {data["Lead Data Steward"]}</li>
-                <li> Business Contact: {data["Business Contact"]}</li>
-                <li> Main Users of Data: {data["Main Users of Data"]}</li>
-                <li> Brief Desc of Data Used: {data["Brief Desc of Data Used"]}</li>
-                <li> Value Dervied From Data: {data["Value Dervied From Data"]}</li>
-                <li> Contracts in Zycus: {data["Contracts in Zycus"]}</li>
-                <li> IT Source: {data["IT Source"]}</li>
-                <li> <div>
+                <div className='modal-body'>
+                <h6> Vendor contact: </h6> {data["Vendor contact"]} <br /> <hr />
+                <h6> Buisness Unit Acquiring:</h6> {data["Buisness Unit Acquiring"]} <br /> <hr />
+                <h6> Lead Data Steward:</h6> {data["Lead Data Steward"]} <br /> <hr />
+                <h6> Business Contact:</h6> {data["Business Contact"]} <br /> <hr />
+                <h6> Main Users of Data:</h6> {data["Main Users of Data"]} <br /> <hr />
+                <h6> Brief Desc of Data Used:</h6> {data["Brief Desc of Data Used"]} <br /> <hr />
+                <h6> Value Dervied From Data:</h6> {data["Value Dervied From Data"]} <br /> <hr />
+                <h6> Contracts in Zycus:</h6> {data["Contracts in Zycus"]} <br /> <hr />
+                <h6> IT Source:</h6> {data["IT Source"]} <br /> <hr />
+                 <div>
                 <a
-                    href={`https://www.google.com`}
+                    href={`${findURL(data)}`}
                     target="_blank"
-                    rel="noopener noreferrer" >
+                    rel="noopener noreferrer" 
+                    >
                     Relevant Contact
                 </a>
-                </div></li>
-                </ul> </div>
+                </div> <br /> <hr />
+                </div>
                 <div className='modal-footer'>
                     <button onClick={props.onClose} className='exitButton'>X</button>
                 </div>
@@ -67,5 +68,29 @@ const Modal = (props) => {
 
     )
 }
+
+function findURL(dataStream) {
+    if (dataStream.WorkdayLink) {
+    let data = dataStream.WorkdayLink.split(" ");
+    let url = "";
+    
+    for (let i = 0; i < data.length; i++) {
+      if( data[i].startsWith("https://www.myworkday.com")){
+        url = data[i];
+        return url;
+      }
+      else if (data[i].startsWith("mailtdo")) {
+        url = data[i];
+      }
+    }
+    if (url === "") {
+      url = "https://www.axiscapital.com/";
+    }
+    return url;
+    }
+    else {
+      return "https://www.axiscapital.com/";
+    }
+  }
 
 export default Modal;

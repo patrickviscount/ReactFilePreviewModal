@@ -25,6 +25,7 @@ function DataTable() {
   const columns = [
     { title: "ID", field: "id", editable: false },
     { title: "Vendor name", field: "Vendor name"},
+    {title: "Test Coloum", field: "tester", hidden: true},
     {
       title: "More Info",
       render: (rowData) => (
@@ -60,11 +61,10 @@ function DataTable() {
   }
 
   useEffect(() => {
-    if(segment != "all" && oldSeg != "all") {
-      console.log('here');
+    if((segment !== "all" && oldSeg !== "all") || (segment === "all" && oldSeg !== "all")) {
       window.location.reload();
     }
-    console.log(segment, oldSeg);
+    // console.log(segment, oldSeg);
     setData(segment === 'all'? data : data.filter(dt => dt["Main Users of Data"] === segment));
     oldSeg = segment;
   }, [segment]);
@@ -118,6 +118,7 @@ function DataTable() {
 
           onRowUpdate: (updatedRow, oldRow) =>
             new Promise((resolve, reject) => {
+              console.log(updatedRow);
               fetch(`${URL}/${oldRow.id}`,{
                 method: "PUT",
                 headers:{

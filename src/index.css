@@ -17,21 +17,26 @@ code {
   overflow: hidden;
 } */
 
-/* tr {
-  background-color: beige;
-} */
+ /* tr {
+  background-color: red;
+} 
 
-/* .MuiTable-root {
-  background-color: beige;
-}
+ .MuiTable-root {
+  background-color: blue;
+}  */
 
 .MuiToolbar-root {
-  background-color: beige;
+  background-color: #00a1f1;
+  color: white;
 }
 
 .MuiTableCell-root {
-  background-color: beige;
-} */
+  background-color: #f1f1f0;
+}
+
+.MuiTypography-root {
+  color: white;
+}
 
 a {
   text-decoration: none;
