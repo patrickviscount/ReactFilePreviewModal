@@ -25,15 +25,14 @@ function DataTable() {
   const columns = [
     { title: "ID", field: "id", editable: false },
     { title: "Vendor name", field: "Vendor name"},
-    {title: "Test Coloum", field: "tester", hidden: true},
     {
       title: "More Info",
       render: (rowData) => (
         <button onClick={() => handleClickModal(rowData["id"])}>
           More Info </button> 
           )},
-    { title: "Vendor contact", field: "Vendor contact" },
-    { title: "Buisness Unit Acquiring", field: "Buisness Unit Acquiring" },
+    { title: "Vendor contact", field: "Vendor contact", hidden: true, hiddenByColumnsButton: true},
+    { title: "Buisness Unit Acquiring", field: "Buisness Unit Acquiring", hidden: true, hiddenByColumnsButton: true},
     {
       title: "Lead Data Steward",
       field: "Lead Data Steward",
@@ -77,21 +76,21 @@ function DataTable() {
       </h4>
       <MaterialTable
         title="3rd Party Vendors"
-        data={data}
+        data={Array.from(data)}
         columns={columns}
         options={{
+          columnsButton: true,
           actionsColumnIndex: -1,
           addRowPosition: "first",
           filtering: filter,
           search: true,
           draggable: true,
-          paginationType: "stepped",
-          exportButton: true
+          paginationType: "stepped"
         }}
         editable={{
           onRowAdd: (newRow) =>
             new Promise((resolve, reject) => {
-              console.log(newRow);
+              // console.log(newRow);
               let newID = findID(data);
               newRow.id = newID;
               fetch(URL,{
@@ -118,7 +117,7 @@ function DataTable() {
 
           onRowUpdate: (updatedRow, oldRow) =>
             new Promise((resolve, reject) => {
-              console.log(updatedRow);
+              // console.log(updatedRow);
               fetch(`${URL}/${oldRow.id}`,{
                 method: "PUT",
                 headers:{
