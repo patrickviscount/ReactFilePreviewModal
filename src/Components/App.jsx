@@ -5,16 +5,20 @@ import { Checkbox, Select, MenuItem } from "@material-ui/core";
 import Modal from "./Modal"
 const URL = "http://localhost:4000/DataStreams";
 let oldSeg = "all";
+var checker = 0;
+var el = document.querySelectorAll('div');
 
 function DataTable() {
 
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState(false);
+  const [view, setView] = useState(false);
   const [segment, setSegment] = useState("all");
   const [show, setShow] = useState(false);
   const [idNum, setIdNum] = useState(1);
+
   useEffect(()=>{
-    getDataList()
+    getDataList();
   },[]);
 
   const getDataList=()=> {
@@ -22,8 +26,22 @@ function DataTable() {
     .then(resp=>setData(resp))
   };
 
+  const getColumns = (index) => {
+    console.log(columns[4], columns[3], el);
+    columns[3].hidden = true;
+    if (checker === 1 || index === 1) {
+      console.log(document.body);
+      columns[4].hidden = true;
+      columns[7].hidden = true;
+      columns[6].hidden = true;
+      columns[5].hidden = true;
+      columns[5].hiddenByColumnsButton = true;
+    }
+    return columns;
+  }
+
   const columns = [
-    { title: "ID", field: "id", editable: false },
+    { title: "ID", field: "id", editable: false},
     { title: "Vendor name", field: "Vendor name"},
     {
       title: "More Info",
@@ -31,8 +49,8 @@ function DataTable() {
         <button onClick={() => handleClickModal(rowData["id"])}>
           More Info </button> 
           )},
-    { title: "Vendor contact", field: "Vendor contact", hidden: true, hiddenByColumnsButton: true},
-    { title: "Buisness Unit Acquiring", field: "Buisness Unit Acquiring", hidden: true, hiddenByColumnsButton: true},
+    { title: "Vendor contact", field: "Vendor contact"},
+    { title: "Buisness Unit Acquiring", field: "Buisness Unit Acquiring"},
     {
       title: "Lead Data Steward",
       field: "Lead Data Steward",
@@ -55,15 +73,21 @@ function DataTable() {
     setShow(!show);
   }
 
+  const handleColumns = () => {
+    setView(!view);
+    getColumns(1);
+  }
+
   const handleCheck = () => {
     setFilter(!filter);
   }
 
   useEffect(() => {
+
     if((segment !== "all" && oldSeg !== "all") || (segment === "all" && oldSeg !== "all")) {
-      window.location.reload();
+      getDataList();
+      setSegment("all");
     }
-    // console.log(segment, oldSeg);
     setData(segment === 'all'? data : data.filter(dt => dt["Main Users of Data"] === segment));
     oldSeg = segment;
   }, [segment]);
@@ -77,7 +101,7 @@ function DataTable() {
       <MaterialTable
         title="3rd Party Vendors"
         data={Array.from(data)}
-        columns={columns}
+        columns={getColumns()}
         options={{
           columnsButton: true,
           actionsColumnIndex: -1,
@@ -102,7 +126,6 @@ function DataTable() {
               }).then(resp=>resp.json()).then(resp=>getDataList())
               .then(resolve());
             }),
-      
 
           onRowDelete: (selectedRow) =>
             new Promise((resolve, reject) => {
@@ -117,6 +140,7 @@ function DataTable() {
 
           onRowUpdate: (updatedRow, oldRow) =>
             new Promise((resolve, reject) => {
+              checker = 1;
               // console.log(updatedRow);
               fetch(`${URL}/${oldRow.id}`,{
                 method: "PUT",
@@ -127,8 +151,21 @@ function DataTable() {
               }).then(resp=>resp.json()).then(resp=>getDataList())
               .then(resolve());
             })
-        }}
+        }
+      }
+
       actions = {[
+        {
+          icon:() => 
+          <Checkbox
+          checked = {view}
+          onChange={handleColumns}
+          inputProps={{'aria-label': 'primary checkbox'}}
+          color="primary"
+          />,
+          tooltip:"Hide/Show Columns",
+          isFreeAction: true
+        },
         {
         icon:() => 
         <Checkbox

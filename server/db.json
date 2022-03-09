@@ -39,7 +39,7 @@
       "Brief Desc of Data Used": "Counting services",
       "Value Dervied From Data": "IT",
       "Contracts in Zycus": "09JHKH09",
-      "IT Source": "",
+      "IT Source": "Hola!",
       "WorkdayLink": "https://www.myworkday.com/axiscapital/d/inst/1$17/247$5193.htmld#TABINDEX=0&SUBTABINDEX=0"
     },
     {
@@ -53,7 +53,7 @@
       "Brief Desc of Data Used": "Counting services",
       "Value Dervied From Data": "IT",
       "Contracts in Zycus": "09JHKH09",
-      "IT Source": "",
+      "IT Source": "Important",
       "WorkdayLink": "https://www.myworkday.com/axiscapital/d/inst/1$17/247$5193.htmld#TABINDEX=0&SUBTABINDEX=0"
     },
     {
@@ -67,7 +67,7 @@
       "Brief Desc of Data Used": "global variable checking",
       "Value Dervied From Data": "Risk Assesment",
       "Contracts in Zycus": "H1Z1Z0MB13S",
-      "IT Source": "",
+      "IT Source": "www.google.ca",
       "WorkdayLink": "https://www.myworkday.com/axiscapital/d/inst/1$17/247$5193.htmld#TABINDEX=0&SUBTABINDEX=0"
     },
     {
@@ -136,22 +136,6 @@
       "Contracts in Zycus": "aaqa is out bbzb is in!",
       "IT Source": "q",
       "id": 10
-    },
-    {
-      "Buisness Unit Acquiring": "s",
-      "id": 11,
-      "Vendor name": "Busy Company",
-      "Vendor contact": "contact@com.com",
-      "Lead Data Steward": "in",
-      "Business Contact": "in",
-      "Main Users of Data": "in",
-      "Brief Desc of Data Used": "in",
-      "Value Dervied From Data": "in",
-      "Contracts in Zycus": "in",
-      "IT Source": "in"
-    },
-    {
-      "id": 12
     }
   ]
 }

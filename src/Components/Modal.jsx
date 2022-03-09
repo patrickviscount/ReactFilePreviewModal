@@ -6,10 +6,12 @@ const Modal = (props) => {
     let ID = props.idNumber;
 
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
   
     function getDataList() {
       fetch(`${URL}/${ID}`).then(resp=>resp.json())
       .then(resp=>setData(resp));
+        setLoading(false);
     }
 
     const closeOnEsc = (e) => {
@@ -19,6 +21,7 @@ const Modal = (props) => {
     }
 
     useEffect(() => {
+        setLoading(true);
         getDataList();
         document.body.addEventListener('keydown', closeOnEsc);
         return function cleanup() {
@@ -33,9 +36,12 @@ const Modal = (props) => {
     if(!props.show){
         return null;
     }
+    if(loading === true){
+      return (<div className='modal'> <div className='modal-content'><h1>Content isn't finished loading</h1> </div> </div>)
+    }
 
     return (
-        <div className='modal' onClick={props.onClose} style={{height: document.body.scrollHeight+20}}>
+        <div className='modal' onClick={props.onClose} style={{height: document.body.scrollHeight+25}}>
             <div className='modal-content' onClick={e => e.stopPropagation()}>
                 <div className='modal-header'>
                     <h4 className='modal-title'>{data["Vendor name"]}</h4>
