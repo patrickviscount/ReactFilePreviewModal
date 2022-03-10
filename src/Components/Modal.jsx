@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import "./Modal.css";
+import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
 const Modal = (props) => {
     const URL = "http://localhost:4000/DataStreams";
@@ -8,11 +9,11 @@ const Modal = (props) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
   
-    function getDataList() {
-      fetch(`${URL}/${ID}`).then(resp=>resp.json())
-      .then(resp=>setData(resp));
-        setLoading(false);
-    }
+    // function getDataList() {
+    //   fetch(`${URL}/${ID}`).then(resp=>resp.json())
+    //   .then(resp=>setData(resp));
+    //     setLoading(false);
+    // }
 
     const closeOnEsc = (e) => {
         if((e.charCode || e.keyCode) === 27){
@@ -22,7 +23,7 @@ const Modal = (props) => {
 
     useEffect(() => {
         setLoading(true);
-        getDataList();
+        // getDataList();
         document.body.addEventListener('keydown', closeOnEsc);
         return function cleanup() {
             document.body.removeEventListener('keydown', closeOnEsc);
@@ -30,7 +31,7 @@ const Modal = (props) => {
     }, [])
 
     useEffect(() => {
-        getDataList();
+        // getDataList();
     }, [props])
 
     if(!props.show){
@@ -57,12 +58,13 @@ const Modal = (props) => {
                 <h6> Contracts in Zycus:</h6> {data["Contracts in Zycus"]} <br /> <hr />
                 <h6> IT Source:</h6> {data["IT Source"]} <br /> <hr />
                  <div>
+                <h6>Contact at Axis:</h6>
                 <a
                     href={`${findURL(data)}`}
                     target="_blank"
                     rel="noopener noreferrer" 
                     >
-                    Relevant Contact
+                    {findURL(data)}
                 </a>
                 </div> <br /> <hr />
                 </div>
@@ -85,7 +87,7 @@ function findURL(dataStream) {
         url = data[i];
         return url;
       }
-      else if (data[i].startsWith("mailtdo")) {
+      else if (data[i].startsWith("mailto")) {
         url = data[i];
       }
     }

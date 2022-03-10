@@ -5,37 +5,44 @@ import { Checkbox, Select, MenuItem } from "@material-ui/core";
 import Modal from "./Modal"
 const URL = "http://localhost:4000/DataStreams";
 let oldSeg = "all";
-var checker = 0;
-var el = document.querySelectorAll('div');
+var checker = 1;
 
 function DataTable() {
 
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState(false);
-  const [view, setView] = useState(false);
+  const [view, setView] = useState(true);
   const [segment, setSegment] = useState("all");
   const [show, setShow] = useState(false);
   const [idNum, setIdNum] = useState(1);
 
   useEffect(()=>{
-    getDataList();
+    // getDataList();
+    // let x = document.querySelectorAll(".MuiIconButton-root");
+    // console.log(x);
+    // x[6].addEventListener('click', function() {
+    // if (checker === 1)
+    //   checker = 0;
+    // else
+    //   checker = 1;
+    // handleColumns();
+    // });
   },[]);
 
-  const getDataList=()=> {
-    fetch(URL).then(resp=>resp.json())
-    .then(resp=>setData(resp))
-  };
+  // const getDataList=()=> {
+  //   fetch(URL).then(resp=>resp.json())
+  //   .then(resp=>setData(resp))
+  // };
 
-  const getColumns = (index) => {
-    console.log(columns[4], columns[3], el);
-    columns[3].hidden = true;
-    if (checker === 1 || index === 1) {
-      console.log(document.body);
+  const getColumns = () => {
+    if (checker === 1) {
+      columns[0].hidden = true;
+      columns[3].hidden = true;
       columns[4].hidden = true;
-      columns[7].hidden = true;
       columns[6].hidden = true;
-      columns[5].hidden = true;
-      columns[5].hiddenByColumnsButton = true;
+      columns[9].hidden = true;
+      columns[10].hidden = true;
+      columns[11].hidden = true;
     }
     return columns;
   }
@@ -65,7 +72,7 @@ function DataTable() {
     { title: "Brief Desc of Data Used", field: "Brief Desc of Data Used" },
     { title: "Value Dervied From Data", field: "Value Dervied From Data" },
     { title: "Contracts in Zycus", field: "Contracts in Zycus" },
-    { title: "IT Source", field: "IT Source" }
+    { title: "IT Source", field: "IT Source", hidden: true, hiddenByColumnsButton: true}
   ];
 
   function handleClickModal(Id) {
@@ -75,22 +82,18 @@ function DataTable() {
 
   const handleColumns = () => {
     setView(!view);
-    getColumns(1);
+    if(checker === 0){
+      checker = 1;
+    }
+    else {
+      checker = 0;
+    }
+    getColumns();
   }
 
   const handleCheck = () => {
     setFilter(!filter);
   }
-
-  useEffect(() => {
-
-    if((segment !== "all" && oldSeg !== "all") || (segment === "all" && oldSeg !== "all")) {
-      getDataList();
-      setSegment("all");
-    }
-    setData(segment === 'all'? data : data.filter(dt => dt["Main Users of Data"] === segment));
-    oldSeg = segment;
-  }, [segment]);
 
   return (
     <div className="App">
@@ -98,12 +101,12 @@ function DataTable() {
       <h4 align="center">
         Please see the react component below
       </h4>
+      <button onClick={()=>handleClickModal(1)}> open react document viewer popup</button>
       <MaterialTable
         title="3rd Party Vendors"
         data={Array.from(data)}
         columns={getColumns()}
         options={{
-          columnsButton: true,
           actionsColumnIndex: -1,
           addRowPosition: "first",
           filtering: filter,
@@ -111,48 +114,6 @@ function DataTable() {
           draggable: true,
           paginationType: "stepped"
         }}
-        editable={{
-          onRowAdd: (newRow) =>
-            new Promise((resolve, reject) => {
-              // console.log(newRow);
-              let newID = findID(data);
-              newRow.id = newID;
-              fetch(URL,{
-                method: "POST",
-                headers:{
-                  "Content-type": "application/json"
-                },
-                body: JSON.stringify(newRow)
-              }).then(resp=>resp.json()).then(resp=>getDataList())
-              .then(resolve());
-            }),
-
-          onRowDelete: (selectedRow) =>
-            new Promise((resolve, reject) => {
-              fetch(`${URL}/${selectedRow.id}`,{
-                method: "DELETE",
-                headers:{
-                  "Content-type": "application/json"
-                },
-              }).then(resp=>resp.json()).then(resp=>getDataList())
-              .then(resolve());
-            }),
-
-          onRowUpdate: (updatedRow, oldRow) =>
-            new Promise((resolve, reject) => {
-              checker = 1;
-              // console.log(updatedRow);
-              fetch(`${URL}/${oldRow.id}`,{
-                method: "PUT",
-                headers:{
-                  "Content-type": "application/json"
-                },
-                body: JSON.stringify(updatedRow)
-              }).then(resp=>resp.json()).then(resp=>getDataList())
-              .then(resolve());
-            })
-        }
-      }
 
       actions = {[
         {
